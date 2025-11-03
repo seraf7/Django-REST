@@ -29,6 +29,15 @@ class BaseViewTest(APITestCase):
                               "descripcion": "Plastilina", 
                               "precio": "30.40",
                               "disponible": True}
+        self.producto_nuevo = {"nombre": "Scolar", 
+                              "descripcion": "Cuaderno", 
+                              "precio": "20.45",
+                              "disponible": True}
+        self.producto_creado = {"id": 3, 
+                                "nombre": "Scolar",
+                                "descripcion": "Cuaderno",
+                                "precio": "20.45",
+                                "disponible": True}
         self.datos_invalidos_1 = {"nombre": "", "descripcion": "Plastilina", "precio": 30.40}
         self.datos_invalidos_2 = {"nombre": "PlayDooh", "descripcion": "Plastilina", "precio": -30.40}
     
@@ -46,6 +55,34 @@ class GetProductosTest(BaseViewTest):
         # Comparacion de las respuestas obtenidas
         self.assertEqual(response.data, serialized.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+# Caso de prueba para crear productos 
+# (POST) /api/productos/
+class AddProductoTest(BaseViewTest):
+    def test_create_producto(self):
+        # Peticion POST con datos validos
+        response = self.client.post(
+            reverse("productos-all"), 
+            data=json.dumps(self.producto_nuevo), 
+            content_type='application/json')
+        self.assertEqual(response.data, self.producto_creado)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # Peticion POST con datos incompletos
+        response = self.client.post(
+            reverse("productos-all"),
+            data=json.dumps(self.datos_invalidos_1),
+            content_type='application/json'
+        )
+        self.assertEqual(response.data["mesage"], "Los campos nombre y precio son requeridos")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Peticion POST con precio invalido
+        response = self.client.post(
+            reverse("productos-all"),
+            data=json.dumps(self.datos_invalidos_2),
+            content_type='application/json'
+        )
+        self.assertEqual(response.data["mesage"], "El precio debe ser mayor a 0")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 # Caso de prueba para obtener un producto por su ID 
 # (GET) /api/productos/{id}/
@@ -84,7 +121,7 @@ class DeleteProductoTest(BaseViewTest):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 # Caso de prueba para actualizar un producto con su ID
-# (PUT) /api/productos/{id}/
+# (PUT) /api/productos/{id}
 class UpdateProductoTest(BaseViewTest):
     def test_update_producto(self):
         # Peticion PUT a la API con datos validos
@@ -111,3 +148,19 @@ class UpdateProductoTest(BaseViewTest):
         )
         self.assertEqual(response.data["mesage"], "El precio debe ser mayor a 0")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+# Test para el modelo de la BD
+class ProductoTest(APITestCase):
+    def setUp(self):
+        self.producto = Producto.objects.create(
+            nombre="Mapped", 
+            descripcion="Juego de reglas",
+            precio=50.2,
+            disponible=True
+        )
+    # Metodo para validar que el producto creado existe
+    def test_producto(self):
+        self.assertEqual(self.producto.nombre,"Mapped")
+        self.assertEqual(self.producto.descripcion, "Juego de reglas")
+        self.assertEqual(self.producto.precio, 50.2)
+        self.assertEqual(self.producto.disponible, True)
