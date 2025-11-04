@@ -4,3 +4,7 @@
 *.pyc
 __pycache__
 db.sqlite3
+
+# Ambientes virtuales #
+.micro_serv
+micro_serv/
