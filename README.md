@@ -109,3 +109,16 @@ Destroying test database for alias 'default'...
 |DELETE|`/api/productos/{id}/`|Eliminar un producto          |
 
 [DOCUMENTACION enpoints](docs/README.md)
+
+## Anexo pruebas
+
+Las pruebas de enpoint, se encuentran definidas en el script `micro_servicio/inventario/tests.py`. Se definen en total seis casos de prueba, uno por cada endpoint y una prueba del modelo Producto
+
+|Método|Endpoint|Nombre de test|Escenarios probados|
+|------|--------|-------|-----|
+|GET   |`/api/productos/`     |GetProductosTest|Obtiene listado de productos|
+|POST  |`/api/productos/`     |AddProductoTest |Crea producto correctamente</br>Error por campos obligatorios faltantes</br>Error por precio no valido|
+|GET   |`/api/productos/{id}/`|GetProductoPorIDTest|Obtiene producto con ID indicado</br>Error al solicitar un ID no existente|
+|PUT   |`/api/productos/{id}/`|UpdateProductoTest|Actuallización correcta del producto</br>Error por campos obligatorios faltantes</br>Error por precio no valido</br>Error al intentar actualizar un ID no existente|
+|DELETE|`/api/productos/{id}/`|DeleteProductoTest|Borra producto con ID indicado</br>Error al intentar borrar un ID no existente|
+|N/A|N/A|ProductoTest|Crea un producto correctamente en la BD|

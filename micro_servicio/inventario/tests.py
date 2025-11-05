@@ -148,6 +148,15 @@ class UpdateProductoTest(BaseViewTest):
         )
         self.assertEqual(response.data["mesage"], "El precio debe ser mayor a 0")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Peticion PUT a la API con ID no existente
+        response = self.client.put(
+            reverse("producto-detalle", kwargs={"pk": self.id_invalido}),
+            data=json.dumps(self.datos_validos),
+            content_type='application/json'
+        )
+        self.assertEqual(response.data["mesage"],
+                         "NO existe el producto con ID {}".format(self.id_invalido))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 # Test para el modelo de la BD
 class ProductoTest(APITestCase):
