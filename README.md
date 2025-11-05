@@ -93,7 +93,12 @@ Destroying test database for alias 'default'...
 (micro_serv) pc:Django-REST/micro_servicio$
 ```
 
-## Información sobre endpoints
+> [!NOTE]
+> Para la ejecución de pruebas dentro de docker, ejecutar
+> ``` bash 
+> docker-compose run --rm web sh -c "python3 manage.py test"
+> ```
+## Anexo endpoints
 
 |Método|Endpoint|Función|
 |------|--------|-------|
@@ -102,3 +107,5 @@ Destroying test database for alias 'default'...
 |GET   |`/api/productos/{id}/`|Obtener un producto dado su ID|
 |PUT   |`/api/productos/{id}/`|Actualizar un producto        |
 |DELETE|`/api/productos/{id}/`|Eliminar un producto          |
+
+[DOCUMENTACION enpoints](docs/README.md)
